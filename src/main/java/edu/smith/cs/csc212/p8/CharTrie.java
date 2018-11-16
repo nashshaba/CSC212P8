@@ -69,7 +69,7 @@ public class CharTrie extends AbstractSet<String> {
 				return this.links.length - 1;
 			}
 			if (lower > 'z' || lower < 'a') {
-				throw new RuntimeException("Bad character: "+lower);
+				return -1;
 			}
 			return lower - 'a';	
 		}
@@ -82,7 +82,11 @@ public class CharTrie extends AbstractSet<String> {
 			if (chars.isEmpty()) {
 				this.terminal = true;
 			} else {
-				int link = getLinkIndex(chars.pollFirst());
+				char c = chars.pollFirst();
+				int link = getLinkIndex(c);
+				if (link == -1) {
+					throw new RuntimeException("Bad Character: "+ c);
+				}
 				if (links[link] == null) {
 					links[link] = new Node();
 				}
@@ -100,6 +104,9 @@ public class CharTrie extends AbstractSet<String> {
 				return this.terminal;
 			} else {
 				int link = getLinkIndex(chars.pollFirst());
+				if (link == -1) {
+					return false;
+				}
 				if (links[link] == null) {
 					return false;
 				}
@@ -114,8 +121,15 @@ public class CharTrie extends AbstractSet<String> {
 		public int countNodes() {
 			int count = 1;
 			// loop over links
-			// if they're not null
-			// count them, too
+			for (Node n: this.links) {
+				// if they're not null
+				if (n != null) {
+					// count them, too
+					count += n.countNodes();
+				}
+				
+			}
+			
 			return count;
 		}
 	}
@@ -145,4 +159,15 @@ public class CharTrie extends AbstractSet<String> {
 	public int size() {
 		return size;
 	}
+//Can be used to test countNodes()
+	
+//	public static void main(String[] args) {
+//		CharTrie newTrie= new CharTrie();
+//		newTrie.insert("a");
+//		newTrie.insert("b");
+//		newTrie.insert("jamuna");
+//		
+//		System.out.println(newTrie.size());
+//		System.out.println(newTrie.countNodes());
+//	}
 }

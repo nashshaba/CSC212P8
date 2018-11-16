@@ -91,19 +91,31 @@ public class LLHash extends AbstractSet<String> {
 	}
 	
 	/**
-	 * TODO, count all the collisions.
+	 * Count all the collisions.
 	 * @return the number of buckets with more than one value.
 	 */
 	public int countCollisions() {
-		return 0;
+		int countC=0;
+		for (Bucket b : this.buckets) {
+			//if the bucket stores more than one value
+			if (b.values.size()>1)
+			countC++;
+		}
+		return countC;
 	}
 
 	/**
-	 * TODO, count all the buckets with a value.
+	 * Count all the buckets with a value.
 	 * @return the number of buckets with any value.
 	 */
 	public int countUsedBuckets() {
 		int count = 0;
+		for (Bucket b : this.buckets) {
+			//if the bucket stores one or more than one value
+			if (b.values.size()>=1) {
+				count++;
+			}
+		}
 		return count;
 	}
 	
